@@ -9,6 +9,9 @@ import { StepFour } from "../components/steps/step4/step4";
 import { StepFive } from "../components/steps/step5/step5";
 import StepAccionistas from "../components/steps/step6/step6";
 import { StepCargaDocumentos } from "../components/steps/step7/step7";
+import { authServices } from "../services/aurumcore/auth.services";
+import { AuthDataInterface, CoordinatesInterface } from "../types/basic";
+import { preSingUp, registerUser } from "../services/aurumcore/onboarding";
 
 const Signup = () => {
   const {
@@ -34,13 +37,13 @@ const Signup = () => {
   const accionistas = watch("accionistas");
 
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(7);
   const totalSteps: number = 7;
 
   //valida los campos cada vez que salta a otro paso
   const nextStep = async () => {
     const valid = await trigger(); // Valida todos los campos del formulario
-    console.log('validando campos ', valid)
+    console.log("validando campos ", valid);
     if (valid) {
       setStep((prev) => (prev < totalSteps ? prev + 1 : prev));
     }
@@ -50,15 +53,6 @@ const Signup = () => {
     setStep((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
-  const onSubmit = (data) => {
-    console.log('informacion a procesar', data);
-    if (!validarPorcentaje()) {
-      alert("El porcentaje total debe ser 100%");
-      return;
-    }
-    //if everything is ok goes to the next step
-    //navigate("/dashboard");
-  };
   //valida el porcentaje de los accionistas
   const validarPorcentaje = () => {
     const total = accionistas.reduce(
@@ -66,6 +60,41 @@ const Signup = () => {
       0
     );
     return total === 100;
+  };
+
+  const onSubmit = async (data) => {
+    console.log("informacion a procesar", data);
+    try {
+      const user: AuthDataInterface = {
+        email: "",
+        password: "",
+      };
+      const coordinates: CoordinatesInterface = {
+        latitude: 89,
+        longitude: 30,
+      };
+      const response = await preSingUp(user, coordinates);
+      console.log("Response from preloginAction", JSON.stringify(response));
+      console.log('Token to process ', response.access_token);
+      try {
+        const response2 = await registerUser(user, response.access_token );
+      console.log("Response from preloginAction", JSON.stringify(response));
+      console.log('Register User ', response2);
+      } catch (error) {
+        console.log('this is the error registering a new user ', error)
+      }
+     
+    } catch (error: any) {
+      console.log("this is the response code, errror ", error);
+    }
+    //1. realizar un login con credentials de signup
+    //2. realizar un registro de cuenta para obtener
+    if (!validarPorcentaje()) {
+      alert("El porcentaje total debe ser 100%");
+      return;
+    }
+    //if everything is ok goes to the next step
+    //navigate("/dashboard");
   };
 
   return (
