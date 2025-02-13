@@ -79,3 +79,80 @@ export const registerUser = async (
     throw error;
   }
 };
+
+export const simpleLogin = async (
+  user: AuthDataInterface,
+  coordinates: CoordinatesInterface
+) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  myHeaders.append("Authorization", `Basic ${import.meta.env.VITE_AUTH_TOKEN}`);
+
+  const urlencoded = new URLSearchParams();
+  urlencoded.append("grant_type", "password");
+  urlencoded.append("password", "Jxi1F5Fvd/vjvcC55SHfEBvqDxGSM2U6fo4sNOBe8Ew=");
+  urlencoded.append(
+    "scope",
+    "use_otp update_info_scope use_accounts use_payments use_profile use_cards"
+  );
+  urlencoded.append("username", "victor@tenet.capital@casher.mx");
+  urlencoded.append("longitude", coordinates.longitude.toString());
+  urlencoded.append("latitude", coordinates.latitude.toString());
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: urlencoded,
+  };
+
+  try {
+    const response = await fetch(import.meta.env.VITE_AUTH_URL, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error en autenticación:", error);
+    throw error;
+  }
+};
+
+export const validateOTP = async (otp: string, token: string) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append(
+    "x-signature",
+    "D1SPIptlg9fOkdG9TdYKFvhdl9Fy7o+efnU0NsW4KM0="
+  );
+  myHeaders.append("Authorization", `Bearer ${token}`);
+  const raw = JSON.stringify({
+    otp: otp,
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_MGTW}/${
+        import.meta.env.VITE_TENANT_NAME
+      }onboarding/1.0.0/otp/validate`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error en el registro:", error);
+    throw error;
+  }
+};

@@ -9,9 +9,14 @@ import { StepFour } from "../components/steps/step4/step4";
 import { StepFive } from "../components/steps/step5/step5";
 import StepAccionistas from "../components/steps/step6/step6";
 import { StepCargaDocumentos } from "../components/steps/step7/step7";
-import { authServices } from "../services/aurumcore/auth.services";
 import { AuthDataInterface, CoordinatesInterface } from "../types/basic";
-import { preSingUp, registerUser } from "../services/aurumcore/onboarding";
+import {
+  preSingUp,
+  registerUser,
+  simpleLogin,
+  validateOTP,
+} from "../services/aurumcore/onboarding";
+import ModalComponent from "../components/components/ModalComponent";
 
 const Signup = () => {
   const {
@@ -29,6 +34,19 @@ const Signup = () => {
       ],
     },
   });
+  const [token, setToken] = useState('');
+  //loading modal
+  const [loading, setLoading] = useState(false);
+  //open modal
+  const [isOpen, setIsOpen] = useState(true);
+  //onclose modal
+  const closeModal = () => setIsOpen(false);  //medio correo o sms
+  const [medio, setMedio] = useState('correo');
+  // correo o telefono
+  const [destino, setDestino] = useState('ejemplo@gmail.com');
+  //titulo modal
+  const [titleText, setTitleText] = useState('Valida tu correo')
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "accionistas",
@@ -75,15 +93,31 @@ const Signup = () => {
       };
       const response = await preSingUp(user, coordinates);
       console.log("Response from preloginAction", JSON.stringify(response));
-      console.log('Token to process ', response.access_token);
+      console.log("Token to process ", response.access_token);
       try {
-        const response2 = await registerUser(user, response.access_token );
-      console.log("Response from preloginAction", JSON.stringify(response));
-      console.log('Register User ', response2);
+        const response2 = await registerUser(user, response.access_token);
+        console.log("Response from preloginAction", JSON.stringify(response));
+        console.log("Register User ", response2);
+        if (response2.responseCode === "0") {
+          console.log("Account created successfully");
+          try {
+            const response3 = await simpleLogin(user, coordinates);
+            console.log("Response from simpleLogin", JSON.stringify(response3));
+            console.log("Token to process simple login token ", response3.access_token);
+            //seteo token para validar OTP
+            setToken(response3.access_token);
+            //show modal
+
+
+          } catch (error) {
+            console.log("Error relogin the user");
+          }
+        } else {
+          console.log("Error creating your account!");
+        }
       } catch (error) {
-        console.log('this is the error registering a new user ', error)
+        console.log("this is the error registering a new user ", error);
       }
-     
     } catch (error: any) {
       console.log("this is the response code, errror ", error);
     }
@@ -95,6 +129,19 @@ const Signup = () => {
     }
     //if everything is ok goes to the next step
     //navigate("/dashboard");
+  };
+  const sendOTP = async (data) => {
+    console.log("data disponible desde validación de otp", data);
+    setLoading(true);
+    setIsOpen(false);
+    try {
+      const response = await validateOTP(data.otp, token);
+            console.log("Response from preloginAction", JSON.stringify(response));
+            console.log("Resultado validacion de otp ", response.responseMessage);
+    } catch (error) {
+      console.error("Error en la conexión", error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -139,6 +186,7 @@ const Signup = () => {
           )}
         </div>
       </form>
+      <ModalComponent isOpen={isOpen} onClose={closeModal} token={token} sendOTP={sendOTP} titleText={titleText} destino={destino} medio={medio}/>
     </div>
   );
 };
