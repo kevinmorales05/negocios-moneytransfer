@@ -1,0 +1,97 @@
+.profile-container {
+    max-width: 450px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: white;
+  }
+  
+  .profile-section {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .profile-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .profile-item button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .profile-item button:hover {
+    background: #0056b3;
+  }
+  
+  /* Estilos del Modal */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+  }
+  
+  .modal input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .modal-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .modal-buttons button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .modal-buttons button:first-child {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .modal-buttons button:last-child {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  /* Responsividad */
+  @media (max-width: 480px) {
+    .profile-container {
+      width: 90%;
+      padding: 15px;
+    }
+  }
+  

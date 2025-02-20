@@ -6,11 +6,13 @@ import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
 import MainPage from "../pages/MainPage";
 
+// Componente para proteger rutas
 const PrivateRoute = ({ element }) => {
-  const { user } = useContext(AuthContext);
-  return user ? element : <Navigate to="/login" />;
+  const { user, logged } = useContext(AuthContext);
+  return logged ? element : <Navigate to="/login" />;
 };
 
+// Componente principal de rutas
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<MainPage />} />

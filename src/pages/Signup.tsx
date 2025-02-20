@@ -45,7 +45,17 @@ const Signup = () => {
   // correo o telefono
   const [destino, setDestino] = useState('ejemplo@gmail.com');
   //titulo modal
-  const [titleText, setTitleText] = useState('Valida tu correo')
+  const [titleText, setTitleText] = useState('Valida tu correo');
+
+  //modal to activate account SMS
+  const [isOpenSMS, setIsOpenSMS] = useState(false);
+  //onclose modal
+  const closeModalSMS = () => setIsOpenSMS(false);  //medio correo o sms
+  const [medio2, setMedio2] = useState('teléfono');
+  // correo o telefono
+  const [destino2, setDestino2] = useState('5432345678');
+  //titulo modal
+  const [titleText2, setTitleText2] = useState('Valida tu teléfono');
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -55,7 +65,7 @@ const Signup = () => {
   const accionistas = watch("accionistas");
 
   const navigate = useNavigate();
-  const [step, setStep] = useState(7);
+  const [step, setStep] = useState(1);
   const totalSteps: number = 7;
 
   //valida los campos cada vez que salta a otro paso
@@ -187,6 +197,7 @@ const Signup = () => {
         </div>
       </form>
       <ModalComponent isOpen={isOpen} onClose={closeModal} token={token} sendOTP={sendOTP} titleText={titleText} destino={destino} medio={medio}/>
+      <ModalComponent isOpen={isOpenSMS} onClose={closeModalSMS} token={token} sendOTP={sendOTP} titleText={titleText2} destino={destino2} medio={medio2}/>
     </div>
   );
 };

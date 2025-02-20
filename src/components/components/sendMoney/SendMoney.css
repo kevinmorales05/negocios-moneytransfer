@@ -1,0 +1,110 @@
+.send-money-container {
+    max-width: 450px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: white;
+  }
+  
+  .send-money-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .send-money-form label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .send-money-form input,
+  .send-money-form select {
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-account-btn,
+  .submit-btn {
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .add-account-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .submit-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  /* Responsividad */
+  @media (max-width: 480px) {
+    .send-money-container {
+      width: 90%;
+      padding: 15px;
+    }
+  }
+  
+  /* Estilos del Modal */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+  }
+  
+  .modal input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .modal-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .save-btn,
+  .cancel-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .save-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
