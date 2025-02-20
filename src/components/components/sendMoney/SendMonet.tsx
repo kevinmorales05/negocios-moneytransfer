@@ -1,28 +1,64 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import './SendMoney.css'
+import OtpModal from '../otpmodal/OtpModal';
+import './SendMoney.css';
 
-const SendMoney = () => {
-  const { register, handleSubmit, reset } = useForm();
-  const { register: registerNewAccount, handleSubmit: handleSubmitNewAccount, reset: resetNewAccount } = useForm();
+interface Account {
+  nickname: string;
+  accountNumber: string;
+  beneficiary: string;
+}
 
-  const [accounts, setAccounts] = useState([
+interface SendMoneyForm {
+  amount: number;
+  concept: string;
+  reference: string;
+  account: string;
+}
+
+const SendMoney: React.FC = () => {
+  const { register, handleSubmit, reset } = useForm<SendMoneyForm>();
+  const { register: registerNewAccount, handleSubmit: handleSubmitNewAccount, reset: resetNewAccount } = useForm<Account>();
+
+  const [accounts, setAccounts] = useState<Account[]>([
     { nickname: "Mi Cuenta", accountNumber: "123456789", beneficiary: "Kevin Morales" },
   ]);
 
-  const [selectedAccount, setSelectedAccount] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showOtpModal, setShowOtpModal] = useState<boolean>(false);
+  const [otpError, setOtpError] = useState<string>("");
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: SendMoneyForm) => {
     console.log("Enviando dinero:", data);
+    // Aquí puedes agregar la lógica para enviar el OTP
+    setShowOtpModal(true); // Mostrar modal de OTP
     reset();
   };
 
-  const onAddAccount = (data) => {
+  const onAddAccount = (data: Account) => {
     setAccounts([...accounts, data]);
     setSelectedAccount(data.accountNumber);
     resetNewAccount();
     setShowModal(false);
+  };
+
+  const onOtpSubmit = (data: { otp: string }) => {
+    // Lógica para verificar el OTP
+    if (data.otp === "123456") { // Cambia esta lógica según tu implementación
+      console.log("Transacción realizada exitosamente");
+      setShowOtpModal(false);
+      setOtpError("");
+      // Aquí puedes realizar la transacción
+    } else {
+      setOtpError("El OTP ingresado no es correcto. Inténtalo de nuevo.");
+    }
+  };
+
+  const resendOtp = () => {
+    console.log("Reenviando OTP...");
+    setOtpError("");
+    // Aquí puedes agregar la lógica para reenviar el OTP
   };
 
   return (
@@ -69,6 +105,14 @@ const SendMoney = () => {
           </div>
         </div>
       )}
+
+      <OtpModal
+        showModal={showOtpModal}
+        onClose={() => setShowOtpModal(false)}
+        onSubmit={onOtpSubmit}
+        errorMessage={otpError}
+        onResend={resendOtp}
+      />
     </div>
   );
 };

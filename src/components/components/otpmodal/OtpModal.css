@@ -1,0 +1,52 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semi-transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que el modal esté por encima de otros elementos */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* Fondo blanco para el contenido del modal */
+    padding: 20px;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    width: 90%; /* Ancho responsivo */
+    max-width: 400px; /* Ancho máximo */
+    text-align: center; /* Alinear texto al centro */
+  }
+  
+  .modal-buttons {
+    margin-top: 15px; /* Espacio encima de los botones */
+  }
+  
+  .confirm-btn,
+  .resend-btn,
+  .cancel-btn {
+    background-color: #007bff; /* Color de fondo azul */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    padding: 10px 15px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    margin: 5px; /* Espacio entre botones */
+    transition: background-color 0.3s; /* Transición suave para el cambio de color */
+  }
+  
+  .confirm-btn:hover,
+  .resend-btn:hover,
+  .cancel-btn:hover {
+    background-color: #0056b3; /* Color más oscuro al pasar el ratón */
+  }
+  
+  .error-message {
+    color: red; /* Texto rojo para mensajes de error */
+    margin-top: 10px; /* Espacio superior */
+    font-size: 0.9em; /* Tamaño de fuente más pequeño */
+  }
+  
