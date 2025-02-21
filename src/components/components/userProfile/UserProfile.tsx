@@ -1,8 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import UpdatePassword from "../updatePassword/UpdatePassword"; // Asegúrate de importar el componente UpdatePassword
 import "./UserProfile.css";
 
-const UserProfile = () => {
+const UserProfile: React.FC = () => {
   const [user, setUser] = useState({
     name: "Traxwire",
     phone: "554 456-7890",
@@ -12,54 +13,68 @@ const UserProfile = () => {
     info: "Cliente VIP desde 2022",
   });
 
-  const [editingField, setEditingField] = useState(null);
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [showUpdatePassword, setShowUpdatePassword] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
-  const handleEdit = (field) => {
+  const handleEdit = (field: string) => {
     setEditingField(field);
     reset({ [field]: user[field] });
   };
 
-  const onSubmit = (data) => {
-    console.log(data)
-    setUser({ ...user, [editingField]: data[editingField] });
+  const onSubmit = (data: Record<string, string>) => {
+    console.log(data);
+    setUser({ ...user, [editingField!]: data[editingField!] });
     setEditingField(null);
   };
 
   return (
     <div className="profile-container">
       <h2>Perfil del Cliente</h2>
-      <div className="profile-section">
-        {Object.keys(user).map((key) => (
-          <div key={key} className="profile-item">
-            <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
-            {user[key]}
-            <button onClick={() => handleEdit(key)}>Editar</button>
-          </div>
-        ))}
-      </div>
-
-      {editingField && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>
-              Editar{" "}
-              {editingField.charAt(0).toUpperCase() + editingField.slice(1)}
-            </h3>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <input
-                type="text"
-                {...register(editingField, { required: true })}
-              />
-              <div className="modal-buttons">
-                <button type="submit">Guardar</button>
-                <button type="button" onClick={() => setEditingField(null)}>
-                  Cancelar
-                </button>
+      {showUpdatePassword ? (
+        <>
+          <UpdatePassword />
+        </>
+      ) : (
+        <>
+          <div className="profile-section">
+            {Object.keys(user).map((key) => (
+              <div key={key} className="profile-item">
+                <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
+                {user[key]}
+                <button onClick={() => handleEdit(key)}>Editar</button>
               </div>
-            </form>
+            ))}
+            <div className="profile-item">
+              <button onClick={() => setShowUpdatePassword(true)}>
+                Actualizar Contraseña
+              </button>
+            </div>
           </div>
-        </div>
+
+          {editingField && (
+            <div className="modal">
+              <div className="modal-content">
+                <h3>
+                  Editar{" "}
+                  {editingField.charAt(0).toUpperCase() + editingField.slice(1)}
+                </h3>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <input
+                    type="text"
+                    {...register(editingField, { required: true })}
+                  />
+                  <div className="modal-buttons">
+                    <button type="submit">Guardar</button>
+                    <button type="button" onClick={() => setEditingField(null)}>
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
