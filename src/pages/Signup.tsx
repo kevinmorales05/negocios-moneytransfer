@@ -35,10 +35,12 @@ const Signup = () => {
     },
   });
   const [token, setToken] = useState('');
+
+  const [userInfo, setUserInfo] = useState(null);
   //loading modal
   const [loading, setLoading] = useState(false);
   //open modal
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   //onclose modal
   const closeModal = () => setIsOpen(false);  //medio correo o sms
   const [medio, setMedio] = useState('correo');
@@ -92,51 +94,53 @@ const Signup = () => {
 
   const onSubmit = async (data) => {
     console.log("informacion a procesar", data);
-    try {
-      const user: AuthDataInterface = {
-        email: "",
-        password: "",
-      };
-      const coordinates: CoordinatesInterface = {
-        latitude: 89,
-        longitude: 30,
-      };
-      const response = await preSingUp(user, coordinates);
-      console.log("Response from preloginAction", JSON.stringify(response));
-      console.log("Token to process ", response.access_token);
-      try {
-        const response2 = await registerUser(user, response.access_token);
-        console.log("Response from preloginAction", JSON.stringify(response));
-        console.log("Register User ", response2);
-        if (response2.responseCode === "0") {
-          console.log("Account created successfully");
-          try {
-            const response3 = await simpleLogin(user, coordinates);
-            console.log("Response from simpleLogin", JSON.stringify(response3));
-            console.log("Token to process simple login token ", response3.access_token);
-            //seteo token para validar OTP
-            setToken(response3.access_token);
-            //show modal
+    setUserInfo(data);
+    setIsOpen(true);
+    // try {
+    //   const user: AuthDataInterface = {
+    //     email: "",
+    //     password: "",
+    //   };
+    //   const coordinates: CoordinatesInterface = {
+    //     latitude: 89,
+    //     longitude: 30,
+    //   };
+    //   const response = await preSingUp(user, coordinates);
+    //   console.log("Response from preloginAction", JSON.stringify(response));
+    //   console.log("Token to process ", response.access_token);
+    //   try {
+    //     const response2 = await registerUser(user, response.access_token);
+    //     console.log("Response from preloginAction", JSON.stringify(response));
+    //     console.log("Register User ", response2);
+    //     if (response2.responseCode === "0") {
+    //       console.log("Account created successfully");
+    //       try {
+    //         const response3 = await simpleLogin(user, coordinates);
+    //         console.log("Response from simpleLogin", JSON.stringify(response3));
+    //         console.log("Token to process simple login token ", response3.access_token);
+    //         //seteo token para validar OTP
+    //         setToken(response3.access_token);
+    //         //show modal
+    //         setIsOpen(true);
 
-
-          } catch (error) {
-            console.log("Error relogin the user");
-          }
-        } else {
-          console.log("Error creating your account!");
-        }
-      } catch (error) {
-        console.log("this is the error registering a new user ", error);
-      }
-    } catch (error: any) {
-      console.log("this is the response code, errror ", error);
-    }
-    //1. realizar un login con credentials de signup
-    //2. realizar un registro de cuenta para obtener
-    if (!validarPorcentaje()) {
-      alert("El porcentaje total debe ser 100%");
-      return;
-    }
+    //       } catch (error) {
+    //         console.log("Error relogin the user");
+    //       }
+    //     } else {
+    //       console.log("Error creating your account!");
+    //     }
+    //   } catch (error) {
+    //     console.log("this is the error registering a new user ", error);
+    //   }
+    // } catch (error: any) {
+    //   console.log("this is the response code, errror ", error);
+    // }
+    // //1. realizar un login con credentials de signup
+    // //2. realizar un registro de cuenta para obtener
+    // if (!validarPorcentaje()) {
+    //   alert("El porcentaje total debe ser 100%");
+    //   return;
+    // }
     //if everything is ok goes to the next step
     //navigate("/dashboard");
   };

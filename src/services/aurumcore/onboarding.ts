@@ -167,3 +167,7 @@ export const validateOTP = async (otp: string, token: string) => {
     throw error;
   }
 };
+//falta integrar este servicio
+export const updateUserInfo = async() => {
+
+}
