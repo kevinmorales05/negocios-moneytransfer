@@ -50,9 +50,35 @@ export async function preSingUp(
     throw error;
   }
 }
-
-
-
+//get address codes according to zipcode
+export async function getAddressByZipCode(postalCode: string, token: string) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", `Bearer ${token}`); // Token de autenticación
+  const urlencoded = new URLSearchParams();
+  urlencoded.append("grant_type", "client_credentials");
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    body: urlencoded,
+  };
+  try {
+    const getAddress = await fetch(
+      `${import.meta.env.VITE_MGTW}/${
+        import.meta.env.VITE_TENANT_NAME
+      }onboarding/1.0.0/getAddress?pc=${postalCode}`,
+      requestOptions
+    );
+    if (!getAddress.ok) {
+      throw new Error(`HTTP error! Status: ${getAddress.status}`);
+    }
+    const data = await getAddress.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching address:", error);
+    throw error;
+  }
+}
 
 export const registerUser = async (
   userData: AuthDataInterface,
