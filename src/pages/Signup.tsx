@@ -44,6 +44,7 @@ import { logoutUser } from "@/services/kuhnipay/auth";
 import { Loader } from "@chakra-ui/react";
 import { StepThreeMock } from "@/components/steps/step3/step3conmock";
 import { StepFiveMock } from "@/components/steps/step5/step5dynamic";
+import { baseCompany, Empresa } from "@/types/onboarding";
 
 const Signup = () => {
   const {
@@ -70,7 +71,7 @@ const Signup = () => {
     longitude: 90,
   });
 
-  const [userInfo, setUserInfo] = useState(null); //data to use
+  const [userInfo, setUserInfo] = useState<Empresa>(baseCompany); //data to use
   const [deviceIDcreated, setDeviceIDcreated] = useState<string>("");
   // user device id
   //loading modal
@@ -112,14 +113,14 @@ const Signup = () => {
   }, []);
 
   const navigate = useNavigate();
-  const [step, setStep] = useState(5);
+  const [step, setStep] = useState(1);
   const totalSteps: number = 7;
 
   //valida los campos cada vez que salta a otro paso
   const nextStep = async () => {
     const valid = await trigger(); // Valida todos los campos del formulario
     const datosParciales = getValues();
-    console.log('datos parciales del formulario ', datosParciales);
+    console.log("datos parciales del formulario ", datosParciales);
     if (step === 6) {
       if (!validarPorcentaje()) {
         alert("El porcentaje total debe ser 100%");
@@ -146,7 +147,7 @@ const Signup = () => {
     return total === 100;
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: Empresa) => {
     console.log("informacion a procesar", data);
     setUserInfo(data);
     //setIsOpen(true);
@@ -177,15 +178,15 @@ const Signup = () => {
         //register personal info kuhni
         try {
           const personalInfo: PersonalDataInterface = {
-            name: data.nombre,
+            name: data.name,
             middleName: "",
-            lastName: data.apellidoPaterno,
-            secondLastName: data.apellidoMaterno,
-            birthDate: data.fechaNacimiento,
+            lastName: data.lastName,
+            secondLastName: data.secondLastName,
+            birthDate: data.stablishmentDate,
             gender: data.genero,
             curp: data.curp,
-            rfc: data.rfchomoclave,
-            phone: data.telefono,
+            rfc: data.rfc,
+            phone: data.mobilePhone,
             accessToken: response.access_token,
           };
           const responsepersonalinfo = await registerPersonalInfo(
@@ -199,13 +200,13 @@ const Signup = () => {
           //register addres kuhni
           try {
             const addressInfo: AddresDataInterface = {
-              street: data.street,
-              internalNumber: data.internalNumber,
-              externalNumber: data.externalNumber,
-              postalCode: data.postalcode,
-              cityName: data.cityName,
-              stateName: data.stateName,
-              suburbName: data.suburbName,
+              street: data.addressLine1,
+              internalNumber: data.addressInteriorNumber,
+              externalNumber: data.addressExteriorNumber,
+              postalCode: data.addressZip,
+              cityName: data.addressCity,
+              stateName: data.addressStateCode,
+              suburbName: data.colonia,
             };
             const responseraddress = await registerAddress(
               addressInfo,
@@ -361,10 +362,7 @@ const Signup = () => {
   const sendOTP = async (data) => {
     console.log("data disponible desde validación de otp, otp", data);
     setLoading(true);
-    const coordinates: CoordinatesInterface = {
-      latitude: 89,
-      longitude: 30,
-    };
+
     try {
       //login to update the session token
       const newUserinfo: AuthDataInterface = {
@@ -437,21 +435,21 @@ const Signup = () => {
 
               try {
                 const userdata: BusinessInfo = {
-                  businessName: userInfo?.businessName,
+                  businessName: userInfo?.businessname,
                   stablishmentDate: userInfo?.stablishmentDate,
-                  msisdn: userInfo?.telephone,
+                  msisdn: userInfo?.mobilePhone,
                   addressLine1: userInfo?.addressLine1,
                   addressLine2: userInfo?.addressLine2,
-                  addressExteriorNumber: userInfo?.exteriorNum,
-                  addressInteriorNumber: userInfo?.interiorNum,
-                  addressIntersections: userInfo?.intersections,
-                  addressSuburb: userInfo?.suburb,
-                  addressCity: userInfo?.city,
-                  addressState: userInfo?.state,
-                  addressCountry: userInfo?.country,
-                  addressZip: userInfo?.zipcode,
-                  mobilePhone: userInfo?.telephone,
-                  leasedLine: userInfo?.telephone,
+                  addressExteriorNumber: userInfo?.addressExteriorNumber,
+                  addressInteriorNumber: userInfo?.addressInteriorNumber,
+                  addressIntersections: "",
+                  addressSuburb: userInfo?.colonia,
+                  addressCity: userInfo?.addressCity,
+                  addressState: userInfo?.addressState,
+                  addressCountry: userInfo?.addressCountry,
+                  addressZip: userInfo?.addressZip,
+                  mobilePhone: userInfo?.mobilePhone,
+                  leasedLine: userInfo?.mobilePhone,
                   businessLine: userInfo.businessLine,
                   docType: "1",
                   docNumber: "12123222",
@@ -463,8 +461,8 @@ const Signup = () => {
                   advancedElectronicSignatureProofImage: "",
                   advancedElectronicSignatureSerialNumber: "",
                   otpMsisdn: "",
-                  name: userInfo.name,
-                  lastName: userInfo.lastName,
+                  name: userInfo.businessname,
+                  lastName: "",
                   risk: {
                     level: 0,
                   },
@@ -589,10 +587,24 @@ const Signup = () => {
         )}
         {step === 2 && <StepTwo register={register} errors={errors} />}
 
-        {step === 3 && <StepThreeMock register={register} errors={errors} watch={watch} setValue={setValue} />}
+        {step === 3 && (
+          <StepThreeMock
+            register={register}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+          />
+        )}
         {step === 4 && <StepFour register={register} errors={errors} />}
 
-        {step === 5 && <StepFiveMock register={register} errors={errors} watch={watch} setValue={setValue} />}
+        {step === 5 && (
+          <StepFiveMock
+            register={register}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+          />
+        )}
 
         {step === 6 && (
           <StepAccionistas

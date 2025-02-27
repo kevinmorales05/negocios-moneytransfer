@@ -32,14 +32,7 @@ export const StepFour = ({ register, errors }) => (
       <option value="13">Pago a proveedores</option>
     </select>
     {errors.keyResourceDestination && <span>Campo obligatorio</span>}
-    <label>Ingresos mensuales</label>
-    <input
-      type="number"
-      {...register("monthlyincome", { required: true, min: 1 })}
-      placeholder="2400"
-      className="form-input"
-    />
-    {errors.monthlyincome && <span>Campo obligatorio</span>}
+    
     <label>Número de Retiros Mensuales</label>
     <select
       {...register("keyMonthlyWithdrawalTransfers", { required: true })}
@@ -92,7 +85,14 @@ export const StepFour = ({ register, errors }) => (
     </select>
     {errors.keyMonthlyDepositAmounts && <span>Ingrese un monto válido</span>}
 
-    
+    <label>Ingresos mensuales</label>
+    <input
+      type="number"
+      {...register("monthlyincome", { required: true, min: 1 })}
+      placeholder="2400"
+      className="form-input"
+    />
+    {errors.monthlyincome && <span>Campo obligatorio</span>}
     <label>Egresos mensuales</label>
     <input
       type="number"
