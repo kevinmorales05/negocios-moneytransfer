@@ -9,27 +9,29 @@ export const StepCargaDocumentos = ({ register, errors }) => (
     </label>
     <input
       type="file"
-      {...register("testimoniopdf", { required: true })}
+      {...register("documentoExistenciaCompania", { required: true })}
       accept="application/pdf"
       className="form-input"
     />
-    {errors.testimoniopdf && <span>Error al cargar el documento</span>}
+    {errors.documentoExistenciaCompania && (
+      <span>Error al cargar el documento</span>
+    )}
     <label>Cédula de identificación fiscal</label>
     <input
       type="file"
-      {...register("cedulapdf", { required: true })}
+      {...register("identificacionCompania", { required: true })}
       accept="application/pdf"
       className="form-input"
     />
-    {errors.cedulapdf && <span>Error al cargar el documento</span>}
+    {errors.identificacionCompania && <span>Error al cargar el documento</span>}
     <label>Comprobante de domicilio (PDF)</label>
     <input
       type="file"
-      {...register("comprobantedomiciliopdf", { required: true })}
+      {...register("companiaComprobanteDomicilio", { required: true })}
       accept="application/pdf"
       className="form-input"
     />
-    {errors.comprobantedomiciliopdf && (
+    {errors.companiaComprobanteDomicilio && (
       <span>Error al cargar el documento</span>
     )}
     <label>
@@ -39,10 +41,10 @@ export const StepCargaDocumentos = ({ register, errors }) => (
     </label>
     <input
       type="file"
-      {...register("poderlegalpdf", { required: true })}
+      {...register("documentoPoderRepLegal", { required: true })}
       accept="application/pdf"
       className="form-input"
     />
-    {errors.poderlegalpdf && <span>Error al cargar el documento</span>}
+    {errors.documentoPoderRepLegal && <span>Error al cargar el documento</span>}
   </div>
 );

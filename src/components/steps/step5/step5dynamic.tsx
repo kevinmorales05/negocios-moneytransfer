@@ -1,6 +1,45 @@
+import { useEffect, useState } from "react";
 import "../../../styles/singup.css";
 
-export const StepFive = ({ register, errors }) => (
+export const StepFiveMock = ({ register, errors, setValue, watch }) => {
+    const [colonias, setColonias] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const postalCode = watch("repaddressZip");
+  
+  
+    useEffect(() => {
+      const fetchLocationData = async () => {
+        if (!postalCode || postalCode.length !== 5) return;
+  
+        setLoading(true);
+        setTimeout(() => {
+          const mockResponse = {
+            codigoPostal: "06700",
+            estadoNombre: "Ciudad de México",
+            estadoCodigo: "CDMX",
+            ciudadNombre: "Cuauhtémoc",
+            ciudadCodigo: "CUA",
+            colonias: [
+              { codigo: "001", nombre: "Roma Norte" },
+              { codigo: "002", nombre: "Roma Sur" },
+              { codigo: "003", nombre: "Hipódromo" },
+            ],
+          };
+  
+          setValue("repaddressState", mockResponse.estadoNombre);
+          setValue("repaddressStateCode", mockResponse.estadoCodigo);
+          setValue("repaddressCity", mockResponse.ciudadNombre);
+          setValue("repaddressCityCode", mockResponse.ciudadCodigo);
+          setValue("repaddressCountry", "México"); // Fijo para México
+          setColonias(mockResponse.colonias);
+          setLoading(false);
+        }, 1000); // Simula un retraso de 1 segundo
+      };
+  
+      fetchLocationData();
+    }, [postalCode, setValue]);
+  
+  return(
   <div className="form-step">
     <h2>Representante Legal</h2>
     <label>Nombre(s)</label>
@@ -75,58 +114,54 @@ export const StepFive = ({ register, errors }) => (
     />
     {errors.curp && <span>{errors.curp.message}</span>}
 
-    <label>Dirección (Línea 1)</label>
-    <input
-      type="text"
-      {...register("repAddressLine1", { required: true })}
-      placeholder="Dirección Línea 1"
-      className="form-input"
-    />
-    {errors.repAddressLine1 && <span>Campo obligatorio</span>}
-
-    <label>Dirección (Línea 2)</label>
-    <input
-      type="text"
-      {...register("repAddressLine2")}
-      placeholder="Dirección Línea 2"
-      className="form-input"
-    />
-    {errors.repAddressLine2 && <span>Campo obligatorio</span>}
-
     <label>Código Postal</label>
-    <input
-      type="text"
-      {...register("repzipcode", { required: true })}
-      placeholder="Colonia"
-      className="form-input"
-    />
-    {errors.repzipcode && <span>Campo obligatorio</span>}
-
-    <label>Colonia</label>
-    <input
-      type="text"
-      {...register("repcolony", { required: true })}
-      placeholder="Colonia"
-      className="form-input"
-    />
-    {errors.repcolony && <span>Campo obligatorio</span>}
-
-    <label>Ciudad</label>
-    <input
-      type="text"
-      {...register("repciudad", { required: true })}
-      placeholder="Colonia"
-      className="form-input"
-    />
-    {errors.repciudad && <span>Campo obligatorio</span>}
-    <label>Estado</label>
-    <input
-      type="text"
-      {...register("repstate", { required: true })}
-      placeholder="Estado"
-      className="form-input"
-    />
-    {errors.repstate && <span>Campo obligatorio</span>}
+      <input
+        type="text"
+        {...register("repaddressZip", {
+          required: "El código postal es obligatorio",
+          minLength: { value: 5, message: "Debe tener 5 dígitos" },
+          maxLength: { value: 5, message: "Debe tener 5 dígitos" },
+          pattern: { value: /^[0-9]{5}$/, message: "Código postal inválido" },
+        })}
+        placeholder="Código Postal"
+        className="form-input"
+      />
+      {errors.repaddressZip && <span>{errors.repaddressZip.message}</span>}
+      {loading && <p>Cargando datos...</p>}
+      <label>Estado</label>
+      <input
+        type="text"
+        {...register("repaddressState")}
+        className="form-input"
+        readOnly
+      />
+      <input type="hidden" {...register("repaddressStateCode")} />{" "}
+      {/* Código del estado */}
+      <label>Ciudad</label>
+      <input
+        type="text"
+        {...register("repaddressCity")}
+        className="form-input"
+        readOnly
+      />
+      <input type="hidden" {...register("repaddressCityCode")} />{" "}
+      {/* Código de la ciudad */}
+      <label>Colonia</label>
+      <select {...register("repcolonia")} className="form-input">
+        <option value="">Seleccione una colonia</option>
+        {colonias.map((colonia, index) => (
+          <option key={index} value={colonia.codigo}>
+            {colonia.nombre}
+          </option>
+        ))}
+      </select>
+      <label>País</label>
+      <input
+        type="text"
+        {...register("repaddressCountry")}
+        className="form-input"
+        readOnly
+      />
 
     <label>Teléfono</label>
     <input
@@ -183,4 +218,4 @@ export const StepFive = ({ register, errors }) => (
       <span>Debe subir un archivo PDF</span>
     )}
   </div>
-);
+)}

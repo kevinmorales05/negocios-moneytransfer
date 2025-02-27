@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
 import MainPage from "../pages/MainPage";
+import SuccessPage from "@/pages/Success";
 
 // Componente para proteger rutas
 const PrivateRoute = ({ element }) => {
@@ -18,6 +19,8 @@ const AppRoutes = () => (
     <Route path="/" element={<MainPage />} />
     <Route path="/login" element={<Login />} />
     <Route path="/signup" element={<Signup />} />
+    <Route path="/success" element={<SuccessPage />} />
+
     <Route
       path="/dashboard"
       element={<PrivateRoute element={<Dashboard />} />}

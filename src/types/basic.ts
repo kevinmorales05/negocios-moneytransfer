@@ -80,3 +80,17 @@ export interface CoordinatesInterface {
     rfc: string;
     phone: string;
  }
+
+ export interface CoordinatesInterface {
+   latitude: number;
+   longitude: number;
+ }
+
+ export interface LogoutRequest {
+   appVersion: string;
+   latitude: string;
+   longitude: string;
+   deviceId: string;
+   userToken: string;
+   username: string;
+}

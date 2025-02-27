@@ -10,7 +10,11 @@ export async function preSingUp(
   //cypher password
   let cypheredpassword: string = "";
   if (user.password && user.email) {
-    cypheredpassword = cryptoAES(user.password, "key", user.email);
+    cypheredpassword = cryptoAES(
+      user.password,
+      import.meta.env.VITE_TENANT_KEY,
+      user.email
+    );
   }
 
   myHeaders.append("Authorization", `Basic ${import.meta.env.VITE_AUTH_TOKEN}`);
@@ -47,6 +51,9 @@ export async function preSingUp(
   }
 }
 
+
+
+
 export const registerUser = async (
   userData: AuthDataInterface,
   token: string
@@ -56,7 +63,11 @@ export const registerUser = async (
   myHeaders.append("Authorization", `Bearer ${token}`); // Token de autenticación
   let cypheredpassword: string = "";
   if (userData.password && userData.email) {
-    cypheredpassword = cryptoAES(userData.password, "key", userData.email);
+    cypheredpassword = cryptoAES(
+      userData.password,
+      import.meta.env.VITE_TENANT_KEY,
+      userData.email
+    );
   }
   const raw = JSON.stringify({
     branchId: import.meta.env.VITE_BRANCH_ID_CASHER,
@@ -97,7 +108,11 @@ export const simpleLogin = async (
   const myHeaders = new Headers();
   let cypheredpassword: string = "";
   if (user.password && user.email) {
-    cypheredpassword = cryptoAES(user.password, "key", user.email);
+    cypheredpassword = cryptoAES(
+      user.password,
+      import.meta.env.VITE_TENANT_KEY,
+      user.email
+    );
   }
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
@@ -134,6 +149,42 @@ export const simpleLogin = async (
   }
 };
 
+export interface Risk {
+  level: number;
+}
+
+export interface BusinessInfo {
+  businessName: string;
+  stablishmentDate: string; // Consider using Date type if needed
+  msisdn: string;
+  addressLine1: string;
+  addressLine2: string;
+  addressExteriorNumber: string;
+  addressInteriorNumber: string;
+  addressIntersections: string;
+  addressSuburb: string;
+  addressCity: string;
+  addressState: string;
+  addressCountry: string;
+  addressZip: string;
+  mobilePhone: string;
+  leasedLine: string;
+  businessLine: string;
+  docType: string;
+  docNumber: string;
+  rfc: string;
+  curp: string;
+  federalInstrumentDocument: string;
+  publicInstrumentDocument: string;
+  taxIdentificationCardImage: string;
+  advancedElectronicSignatureProofImage: string;
+  advancedElectronicSignatureSerialNumber: string;
+  otpMsisdn: string;
+  name: string;
+  lastName: string;
+  risk: Risk;
+}
+
 export const validateOTP = async (otp: string, token: string) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -168,6 +219,34 @@ export const validateOTP = async (otp: string, token: string) => {
   }
 };
 //falta integrar este servicio
-export const updateUserInfo = async() => {
+export const updateUserInfo = async (userData: BusinessInfo, token: string) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("x-signature", import.meta.env.VITE_X_SIGNATURE);
+  myHeaders.append("Authorization", `Bearer ${token}`); // Token de autenticación
 
-}
+  const raw = JSON.stringify(userData);
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_MGTW}/${
+        import.meta.env.VITE_TENANT_NAME
+      }onboarding/1.0.0/register/updateInfo`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error en el update de datos:", error);
+    throw error;
+  }
+};

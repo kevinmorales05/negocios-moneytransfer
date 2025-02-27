@@ -199,12 +199,12 @@ export async function registerAddress(
   }
 }
 
-interface Beneficiary {
+export interface Beneficiary {
   fullName: string;
   percentage: number;
 }
 
-interface RegisterBeneficiariesRequest {
+export interface RegisterBeneficiariesRequest {
   appVersion: string;
   latitude: string;
   longitude: string;
@@ -264,8 +264,8 @@ export interface IndicatorRequest {
   latitude: string;
   longitude: string;
   deviceId: string;
-  indicatorName: string;
-  indicatorValue: IndicatorValue;
+  indicatorName: IndicatorValue;
+  indicatorValue: boolean;
 }
 
 export async function updateIndicator(
@@ -300,7 +300,7 @@ export async function updateIndicator(
   }
 }
 
-interface TransactionProfile {
+export interface TransactionProfile {
   keyResourceOrigin: number;
   keyResourceDestination: number;
   accountUse: string;
@@ -310,7 +310,7 @@ interface TransactionProfile {
   keyMonthlyWithdrawalAmounts: number;
 }
 
-interface RegisterProfilePayload {
+export interface RegisterProfilePayload {
   appVersion: string;
   latitude: string;
   longitude: string;

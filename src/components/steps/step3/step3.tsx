@@ -2,37 +2,66 @@ import "../../../styles/singup.css";
 
 export const StepThree = ({ register, errors }) => (
   <div className="form-step">
-    <h2>Domicilio</h2>
-    <label>Calle</label>
+    <h2>Domicilio de la Empresa</h2>
+    <label>Calle Principal</label>
     <input
       type="text"
-      {...register("calle", { required: "La calle es obligatoria" })}
-      placeholder="Calle"
+      {...register("addressLine1", { required: "La calle es obligatoria" })}
+      placeholder="Calle principal"
       className="form-input"
     />
-    {errors.calle && <span>{errors.calle.message}</span>}
+    {errors.addressLine1 && <span>{errors.addressLine1.message}</span>}
 
-    <label>Número interior</label>
+    <label>Calle Secundaria</label>
     <input
       type="text"
-      {...register("numinterior", {
-        required: "El número interior es obligatorio",
-      })}
-      placeholder="Número Interior"
+      {...register("addressLine2", { required: "La calle es obligatoria" })}
+      placeholder="Calle secundaria"
       className="form-input"
     />
-    {errors.numinterior && <span>{errors.numinterior.message}</span>}
-
+    {errors.addressLine2 && <span>{errors.addressLine2.message}</span>}
     <label>Número exterior</label>
     <input
       type="text"
-      {...register("numexterior", {
+      {...register("addressExteriorNumber", {
         required: "El número interior es obligatorio",
       })}
-      placeholder="Número Interior"
+      placeholder="360"
       className="form-input"
     />
-    {errors.numexterior && <span>{errors.numexterior.message}</span>}
+    {errors.addressExteriorNumber && (
+      <span>{errors.addressExteriorNumber.message}</span>
+    )}
+    <label>Número interior</label>
+    <input
+      type="text"
+      {...register("addressInteriorNumber", {
+        required: "El número interior es obligatorio",
+      })}
+      placeholder="STE 200-C"
+      className="form-input"
+    />
+    {errors.addressInteriorNumber && (
+      <span>{errors.addressInteriorNumber.message}</span>
+    )}
+    <label>Código Postal</label>
+    <input
+      type="text"
+      {...register("addressZip", {
+        required: "El código postal es obligatorio",
+      })}
+      placeholder="Código Postal"
+      className="form-input"
+    />
+    {errors.addressZip && <span>{errors.addressZip.message}</span>}
+    <label>Estado</label>
+    <input
+      type="text"
+      {...register("addressState", { required: "El estado es obligatorio" })}
+      placeholder="Estado"
+      className="form-input"
+    />
+    {errors.addressState && <span>{errors.addressState.message}</span>}
     <label htmlFor="">Colonia</label>
     <input
       type="text"
@@ -40,47 +69,23 @@ export const StepThree = ({ register, errors }) => (
       placeholder="Full Name"
       className="form-input"
     />
-    <label>Código Postal</label>
-    <input
-      type="text"
-      {...register("zipcode", { required: "El código postal es obligatorio" })}
-      placeholder="Código Postal"
-      className="form-input"
-    />
-    {errors.zipcode && <span>{errors.zipcode.message}</span>}
 
-    <label>Estado</label>
-    <input
-      type="text"
-      {...register("estado", { required: "El estado es obligatorio" })}
-      placeholder="Estado"
-      className="form-input"
-    />
-    {errors.estado && <span>{errors.estado.message}</span>}
     <label htmlFor="">Ciudad</label>
     <input
       type="text"
-      {...register("ciudad", { required: true })}
+      {...register("addressCity", { required: true })}
       placeholder="Full Name"
       className="form-input"
     />
-    {errors.ciudad && <span>La ciudad es obligatoria</span>}
+    {errors.addressCity && <span>La ciudad es obligatoria</span>}
 
     <label>País</label>
     <input
       type="text"
-      {...register("pais", { required: "El país es obligatorio" })}
+      {...register("addressCountry", { required: "El país es obligatorio" })}
       placeholder="País"
       className="form-input"
     />
-    {errors.pais && <span>{errors.pais.message}</span>}
-    <label htmlFor="">Teléfono del domicilio</label>
-    <input
-      type="text"
-      {...register("telefono", { required: true })}
-      placeholder="Full Name"
-      className="form-input"
-    />
-    {errors.telefono && <span>El teléfono es obligatorio </span>}
+    {errors.addressCountry && <span>{errors.addressCountry.message}</span>}
   </div>
 );
