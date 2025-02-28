@@ -17,11 +17,11 @@ export async function preSingUp(
       user.email
     );
   }
-  const base64Credentials = btoa(`${import.meta.env.VITE_CONSUMER_KEY}:${import.meta.env.VITE_SECRET}`);
+  //const base64Credentials = btoa(`${import.meta.env.VITE_CONSUMER_KEY}:${import.meta.env.VITE_SECRET}`);
   const base64Credentials2 = Buffer.from(`${import.meta.env.VITE_CONSUMER_KEY}:${import.meta.env.VITE_SECRET}`).toString('base64');
-  console.log('base 64 string authorization basic ', base64Credentials);
+  //console.log('base 64 string authorization basic ', base64Credentials);
   console.log('base 64 string authorization basic con buffer ', base64Credentials2);
-
+console.log('cyphered password ', cypheredpassword);
 
   myHeaders.append("Authorization", `Basic ${base64Credentials2}`);
 
