@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "../styles/Success.css"; // Importa el archivo CSS
+import "../styles/success.css"; // Importa el archivo CSS
 
 const SuccessPage = () => {
   const navigate = useNavigate();
