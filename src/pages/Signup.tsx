@@ -1,5 +1,5 @@
 import "../styles/singup.css"; // Para los estilos del archivo
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { StepOne } from "../components/steps/step1/step1";
@@ -120,7 +120,7 @@ const Signup = () => {
       .catch((error) => console.error(error.message));
   }, []);
 
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const totalSteps: number = 7;
 
@@ -590,6 +590,7 @@ const Signup = () => {
           };
           const logoutResponse = await logoutUser(logoutrequest, token);
           console.log("response logout ", logoutResponse);
+          navigate("/success");
         } catch (error) {
           console.log("error login out ", error);
         }
@@ -624,7 +625,7 @@ const Signup = () => {
   //   await delay(5000); // Espera 5 segundos antes de hacer la solicitud
 
   //   setLoading(false);
-  //   navigate("/success");
+     
   // };
   return (
     <div className="signup-container">
