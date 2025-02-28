@@ -16,8 +16,11 @@ export async function preSingUp(
       user.email
     );
   }
+  const base64Credentials = btoa(`${import.meta.env.VITE_CONSUMER_KEY}:${import.meta.env.VITE_SECRET}`);
 
-  myHeaders.append("Authorization", `Basic ${import.meta.env.VITE_AUTH_TOKEN}`);
+  console.log('base 64 string authorization basic ', base64Credentials)
+
+  myHeaders.append("Authorization", `Basic ${base64Credentials}`);
 
   const urlencoded = new URLSearchParams();
   urlencoded.append("grant_type", "client_credentials");
