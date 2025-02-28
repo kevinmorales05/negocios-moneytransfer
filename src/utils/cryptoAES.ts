@@ -17,13 +17,13 @@ const cryptoAES = (
   );
 
   //AES encryption
-  let encrypted = CryptoJS.AES.encrypt(plaintextPassword, hashedKey, {
+  const encrypted = CryptoJS.AES.encrypt(plaintextPassword, hashedKey, {
     mode: CryptoJS.mode.ECB,
     padding: CryptoJS.pad.Pkcs7,
   });
   console.log('The encryption was successfull!');
 
-  return encrypted;
+  return encrypted.toString();;
 };
 
 export default cryptoAES;

@@ -42,6 +42,7 @@ console.log('cyphered password ', cypheredpassword);
     headers: myHeaders,
     body: urlencoded,
   };
+  console.log('request ', requestOptions);
 
   try {
     const response = await fetch(import.meta.env.VITE_AUTH_URL, requestOptions);
