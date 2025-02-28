@@ -1,5 +1,6 @@
 import cryptoAES from "@/utils/cryptoAES";
 import { AuthDataInterface, CoordinatesInterface } from "../../types/basic";
+import { Buffer } from 'buffer';
 
 export async function preSingUp(
   user: AuthDataInterface,
@@ -17,10 +18,12 @@ export async function preSingUp(
     );
   }
   const base64Credentials = btoa(`${import.meta.env.VITE_CONSUMER_KEY}:${import.meta.env.VITE_SECRET}`);
+  const base64Credentials2 = Buffer.from(`${import.meta.env.VITE_CONSUMER_KEY}:${import.meta.env.VITE_SECRET}`).toString('base64');
+  console.log('base 64 string authorization basic ', base64Credentials);
+  console.log('base 64 string authorization basic con buffer ', base64Credentials2);
 
-  console.log('base 64 string authorization basic ', base64Credentials)
 
-  myHeaders.append("Authorization", `Basic ${base64Credentials}`);
+  myHeaders.append("Authorization", `Basic ${base64Credentials2}`);
 
   const urlencoded = new URLSearchParams();
   urlencoded.append("grant_type", "client_credentials");
