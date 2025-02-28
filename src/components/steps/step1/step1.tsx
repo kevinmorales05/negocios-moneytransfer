@@ -1,21 +1,10 @@
 import { useState } from "react";
-import { UseFormRegister, FieldErrors, UseFormWatch } from "react-hook-form";
 import "../../../styles/singup.css";
+import { StepsProps } from "../types";
 
-interface StepOneProps {
-  register: UseFormRegister<FormData>;
-  errors: FieldErrors<FormData>;
-  watch: UseFormWatch<FormData>;
-}
 
-interface FormData {
-  email: string;
-  confirmEmail: string;
-  password: string;
-  confirmPassword: string;
-}
 
-export const StepOne: React.FC<any> = ({ register, errors, watch }) => {
+export const StepOne: React.FC<StepsProps> = ({ register, errors, watch }) => {
   const [showPassword, setShowPassword] = useState(false);
   const passwordValue = watch("password");
 

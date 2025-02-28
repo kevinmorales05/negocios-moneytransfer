@@ -1,10 +1,38 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "../../../styles/singup.css";
+import { StepsProps } from "../types";
 
-const StepAccionistas = ({ register, errors, fields, append, remove, watch }) => {
-  const [tieneMasDeCuatro, setTieneMasDeCuatro] = useState(false);
-  
-  
+const StepAccionistas: React.FC<StepsProps> = ({
+  register,
+  errors,
+  fields,
+  append,
+  remove,
+  watch,
+}) => {
+  const [tieneMasDeCuatro, setTieneMasDeCuatro] = useState<boolean>(false);
+
+  const handleAddAccionista = () => {
+    if (append) {
+      append({
+        nombre: "",
+        apellido: "",
+        rfc: "",
+        porcentaje: "",
+        capital: "",
+        pep: "",
+        esPEP: "",
+        detallePEP: "",
+      },);
+    }
+  };
+
+  const handleRemoveAccionista = (index:number) => {
+    if(remove) {
+      remove(index)
+    }
+  };
+
   return (
     <div className="form-step">
       <h2>Estructura Accionaria</h2>
@@ -21,7 +49,7 @@ const StepAccionistas = ({ register, errors, fields, append, remove, watch }) =>
         <option value="no">No</option>
       </select>
       {errors.tieneMasDeCuatro && <span>Campo obligatorio</span>}
-      {fields.map((field, index) => (
+      {fields?.map((field, index) => (
         <div key={field.id} className="accionista-section">
           <label>Nombre</label>
           <input
@@ -142,29 +170,25 @@ const StepAccionistas = ({ register, errors, fields, append, remove, watch }) =>
           )}
 
           {fields.length > 1 && (
-            <button type="button" onClick={() => remove(index)}>
+            <button type="button" onClick={() => handleRemoveAccionista(index)}>
               Eliminar
             </button>
           )}
         </div>
       ))}
-{
-  tieneMasDeCuatro  ? <></> : <> <button
-  type="button"
-  onClick={() =>
-    append({
-      nombre: "",
-      rfc: "",
-      porcentaje: "",
-      capital: "",
-      pep: "",
-    })
-  }
->
-  + Agregar Accionista
-</button></>
-}
-      
+      {tieneMasDeCuatro ? (
+        <></>
+      ) : (
+        <>
+          {" "}
+          <button
+            type="button"
+            onClick={handleAddAccionista}
+          >
+            + Agregar Accionista
+          </button>
+        </>
+      )}
     </div>
   );
 };

@@ -129,7 +129,7 @@ export async function registerPersonalInfo(
 
     const result = await response.json();
     console.log(result);
-    return { success: false, message: (error as Error).message };
+    return { success: false, message: "error desconocido!"}
   } catch (error) {
     console.error(error);
     return { success: false, message: (error as Error).message };
@@ -201,7 +201,7 @@ export async function registerAddress(
 
 export interface Beneficiary {
   fullName: string;
-  percentage: number;
+  percentage: string;
 }
 
 export interface RegisterBeneficiariesRequest {

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import "./ModalComponent.css"; 
+import { useForm, SubmitHandler } from "react-hook-form";
+import "./ModalComponent.css";
+import { OTPFormData } from "./types";
 
 interface ModalComponentProps {
   isOpen: boolean;
@@ -9,7 +10,7 @@ interface ModalComponentProps {
   titleText: string;
   destino: string;
   medio: string;
-  sendOTP: any;
+  sendOTP: (data: OTPFormData) => void;
 }
 
 export default function ModalComponent({
@@ -25,10 +26,19 @@ export default function ModalComponent({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<OTPFormData>(); // ✅ Ensure correct typing for form data
+
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
+
+  console.log("this is the received token", token);
+
+  const onSubmit: SubmitHandler<OTPFormData> = (data) => {
+    setLoading(true);
+    sendOTP(data);
+    setLoading(false);
+  };
 
   return (
     <div className="modal-overlay">
@@ -51,11 +61,15 @@ export default function ModalComponent({
           {errors.otp && <p className="error-message">{errors.otp.message}</p>}
         </div>
         <div className="modal-footer">
-          <button onClick={onClose} disabled={loading} className="modal-cancel-button">
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className="modal-cancel-button"
+          >
             Cancelar
           </button>
           <button
-            onClick={handleSubmit(sendOTP)}
+            onClick={handleSubmit(onSubmit)}
             disabled={loading}
             className="modal-submit-button"
           >

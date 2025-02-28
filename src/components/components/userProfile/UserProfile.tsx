@@ -3,8 +3,17 @@ import { useForm } from "react-hook-form";
 import UpdatePassword from "../updatePassword/UpdatePassword"; // Asegúrate de importar el componente UpdatePassword
 import "./UserProfile.css";
 
+interface User {
+  name: string;
+  phone: string;
+  email: string;
+  accountNumber: string;
+  address: string;
+  info: string;
+}
+
 const UserProfile: React.FC = () => {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<User>({
     name: "Traxwire",
     phone: "554 456-7890",
     email: "victor@traxwire.com",
@@ -17,14 +26,16 @@ const UserProfile: React.FC = () => {
   const [showUpdatePassword, setShowUpdatePassword] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
-  const handleEdit = (field: string) => {
+  const handleEdit = (field: keyof User) => {
     setEditingField(field);
     reset({ [field]: user[field] });
   };
 
   const onSubmit = (data: Record<string, string>) => {
     console.log(data);
-    setUser({ ...user, [editingField!]: data[editingField!] });
+    if (editingField) {
+      setUser({ ...user, [editingField]: data[editingField] });
+    }
     setEditingField(null);
   };
 
@@ -41,8 +52,10 @@ const UserProfile: React.FC = () => {
             {Object.keys(user).map((key) => (
               <div key={key} className="profile-item">
                 <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
-                {user[key]}
-                <button onClick={() => handleEdit(key)}>Editar</button>
+                {user[key as keyof User]}
+                <button onClick={() => handleEdit(key as keyof User)}>
+                  Editar
+                </button>
               </div>
             ))}
             <div className="profile-item">

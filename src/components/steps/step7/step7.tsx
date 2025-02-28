@@ -1,6 +1,7 @@
 import "../../../styles/singup.css";
+import { StepsProps } from "../types";
 
-export const StepCargaDocumentos = ({ register, errors }) => (
+export const StepCargaDocumentos:React.FC<StepsProps> = ({ register, errors }) => (
   <div className="form-step">
     <h2>Carga de Documentos</h2>
     <label>

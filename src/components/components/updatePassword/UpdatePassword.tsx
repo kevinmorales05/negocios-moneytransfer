@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import OtpModal from "../otpmodal/OtpModal"; // Asegúrate de importar el componente OtpModal
 import "./UpdatePassword.css";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "@/context/AuthContext";
+import { useAuth } from "@/context/authSafeHook";
 
 interface UpdatePasswordForm {
   newPassword: string;
@@ -11,12 +11,12 @@ interface UpdatePasswordForm {
 }
 
 const UpdatePassword: React.FC = () => {
-  const { register, handleSubmit, watch, setError, reset } =
+  const { register, handleSubmit, setError, reset } =
     useForm<UpdatePasswordForm>();
   const [showOtpModal, setShowOtpModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage] = useState("");
   const navigate = useNavigate();
-  const { logout } = useContext(AuthContext);
+  const { logout } = useAuth();
 
   const onSubmit = (data: UpdatePasswordForm) => {
     if (data.newPassword !== data.confirmPassword) {

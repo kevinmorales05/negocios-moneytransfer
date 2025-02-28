@@ -1,14 +1,14 @@
-import React, { useContext, useState } from "react";
+import {  useState } from "react";
 
 import { Link } from "react-router-dom";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "@/context/AuthContext";
+import { useAuth } from "@/context/authSafeHook";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { logout, logged } = useContext(AuthContext);
+  const {logged, logout} = useAuth();
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };

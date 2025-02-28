@@ -1,6 +1,7 @@
 import "../../../styles/singup.css";
+import { StepsProps } from "../types";
 
-export const StepFour = ({ register, errors }) => (
+export const StepFour: React.FC<StepsProps> = ({ register, errors }) => (
   <div className="form-step">
     <h2>Perfil Transaccional</h2>
     <label>Origen de Recursos</label>

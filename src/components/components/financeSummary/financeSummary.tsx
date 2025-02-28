@@ -1,8 +1,11 @@
-// src/components/FinanceSummary.jsx
-import React from "react";
 import "./financeSummary.css";
+import { FinanceSummaryProps } from "./types";
 
-const FinanceSummary = ({ companyName, balance, transactions }) => {
+const FinanceSummary: React.FC<FinanceSummaryProps> = ({
+  companyName,
+  balance,
+  transactions,
+}) => {
   const currentDate = new Date().toLocaleDateString();
 
   return (
@@ -14,7 +17,9 @@ const FinanceSummary = ({ companyName, balance, transactions }) => {
       </div>
 
       {/* Sección del balance actual */}
-      <div className="balance-section">Balance Actual: ${balance.toFixed(2)}</div>
+      <div className="balance-section">
+        Balance Actual: ${balance.toFixed(2)}
+      </div>
 
       {/* Sección de transacciones */}
       <div className="transactions">

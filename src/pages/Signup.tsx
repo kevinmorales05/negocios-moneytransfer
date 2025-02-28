@@ -1,12 +1,10 @@
-import "../styles/singup.css"; // Suponiendo que agregarás estilos en este archivo.
-import { useNavigate } from "react-router-dom";
+import "../styles/singup.css"; // Para los estilos del archivo
+//import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { StepOne } from "../components/steps/step1/step1";
 import { StepTwo } from "../components/steps/step2/step2";
-import { StepThree } from "../components/steps/step3/step3";
 import { StepFour } from "../components/steps/step4/step4";
-import { StepFive } from "../components/steps/step5/step5";
 import StepAccionistas from "../components/steps/step6/step6";
 import { StepCargaDocumentos } from "../components/steps/step7/step7";
 import {
@@ -39,12 +37,13 @@ import {
   TransactionProfile,
   updateIndicator,
 } from "@/services/kuhnipay/onboardingkuhnipay";
-import { delay, generateUniqueId, getGeolocation } from "@/utils/functions";
+import { generateUniqueId, getGeolocation } from "@/utils/functions";
 import { logoutUser } from "@/services/kuhnipay/auth";
 import { Loader } from "@chakra-ui/react";
 import { StepThreeMock } from "@/components/steps/step3/step3conmock";
 import { StepFiveMock } from "@/components/steps/step5/step5dynamic";
 import { baseCompany, Empresa } from "@/types/onboarding";
+import { OTPFormData } from "@/components/components/types";
 
 const Signup = () => {
   const {
@@ -56,11 +55,20 @@ const Signup = () => {
     setValue,
     getValues,
     formState: { errors },
-  } = useForm({
+  } = useForm<Empresa>({
     mode: "onChange",
     defaultValues: {
       accionistas: [
-        { nombre: "", rfc: "", porcentaje: "", capital: "", pep: "" },
+        {
+          nombre: "",
+          apellido: "",
+          rfc: "",
+          porcentaje: "",
+          capital: "",
+          pep: "",
+          esPEP: "",
+          detallePEP: "",
+        },
       ],
     },
   });
@@ -80,21 +88,21 @@ const Signup = () => {
   const [isOpen, setIsOpen] = useState(false);
   //onclose modal
   const closeModal = () => setIsOpen(false); //medio correo o sms
-  const [medio, setMedio] = useState("correo");
+  const [medio] = useState("correo");
   // correo o telefono
-  const [destino, setDestino] = useState("ejemplo@gmail.com");
+  const [destino] = useState("ejemplo@gmail.com");
   //titulo modal
-  const [titleText, setTitleText] = useState("Valida tu correo");
+  const [titleText] = useState("Valida tu correo");
 
   //modal to activate account SMS
   const [isOpenSMS, setIsOpenSMS] = useState(false);
   //onclose modal
   const closeModalSMS = () => setIsOpenSMS(false); //medio correo o sms
-  const [medio2, setMedio2] = useState("teléfono");
+  const [medio2] = useState("teléfono");
   // correo o telefono
-  const [destino2, setDestino2] = useState("5432345678");
+  const [destino2] = useState("5432345678");
   //titulo modal
-  const [titleText2, setTitleText2] = useState("Valida tu teléfono");
+  const [titleText2] = useState("Valida tu teléfono");
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -112,8 +120,8 @@ const Signup = () => {
       .catch((error) => console.error(error.message));
   }, []);
 
-  const navigate = useNavigate();
-  const [step, setStep] = useState(5);
+  //const navigate = useNavigate();
+  const [step, setStep] = useState(1);
   const totalSteps: number = 7;
 
   //valida los campos cada vez que salta a otro paso
@@ -207,7 +215,7 @@ const Signup = () => {
             lastName: data.lastName,
             secondLastName: data.secondLastName,
             birthDate: data.stablishmentDate,
-            gender: data.genero,
+            gender: parseInt(data.genero, 10),
             curp: data.curp,
             rfc: data.rfc,
             phone: data.mobilePhone,
@@ -245,7 +253,7 @@ const Signup = () => {
             data.accionistas.map((accionista) => {
               const newBeneficiary: Beneficiary = {
                 fullName: accionista.nombre,
-                percentage: accionista.porcentaje,
+                percentage: accionista.porcentaje.toString(),
               };
               beneficiariesFormat.push(newBeneficiary);
             });
@@ -256,7 +264,7 @@ const Signup = () => {
                 latitude: coordinates.latitude.toString(),
                 longitude: coordinates.longitude.toString(),
                 deviceId: deviceID,
-                msisdn: data.telefono,
+                msisdn: data.mobilePhone,
                 beneficiariesData: beneficiariesFormat,
               };
               const responsebeneficiaries = await registerBeneficiaries(
@@ -270,14 +278,28 @@ const Signup = () => {
               try {
                 //register transactional profile
                 const transactionalprofile: TransactionProfile = {
-                  keyResourceOrigin: data.keyResourceOrigin,
-                  keyResourceDestination: data.keyResourceDestination,
+                  keyResourceOrigin: parseInt(data.keyResourceOrigin, 10),
+                  keyResourceDestination: parseInt(
+                    data.keyResourceDestination,
+                    10
+                  ),
                   accountUse: "Cuenta de Ahorro",
-                  keyMonthlyDepositTransfers: data.keyMonthlyDepositTransfers,
-                  keyMonthlyDepositAmounts: data.keyMonthlyDepositAmounts,
-                  keyMonthlyWithdrawalTransfers:
+                  keyMonthlyDepositTransfers: parseInt(
+                    data.keyMonthlyDepositTransfers,
+                    10
+                  ),
+                  keyMonthlyDepositAmounts: parseInt(
+                    data.keyMonthlyDepositAmounts,
+                    10
+                  ),
+                  keyMonthlyWithdrawalTransfers: parseInt(
                     data.keyMonthlyWithdrawalTransfers,
-                  keyMonthlyWithdrawalAmounts: data.keyMonthlyWithdrawalAmounts,
+                    10
+                  ),
+                  keyMonthlyWithdrawalAmounts: parseInt(
+                    data.keyMonthlyWithdrawalAmounts,
+                    10
+                  ),
                 };
                 const registerProfile: RegisterProfilePayload = {
                   appVersion: "1.0.0",
@@ -371,7 +393,7 @@ const Signup = () => {
             //show modal
             setIsOpen(true);
           } catch (error) {
-            console.log("Error relogin the user");
+            console.log("Error relogin the user ", error);
           }
         } else {
           console.log("Error creating your account!");
@@ -379,11 +401,11 @@ const Signup = () => {
       } catch (error) {
         console.log("this is the error registering a new user ", error);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log("this is the response code, errror ", error);
     }
   };
-  const sendOTP = async (data) => {
+  const sendOTP = async (data: OTPFormData) => {
     console.log("data disponible desde validación de otp, otp", data);
     setLoading(true);
 
@@ -504,7 +526,9 @@ const Signup = () => {
                 closeModal();
                 //open modal to validate OTP for SMS and activate account in STP
                 setIsOpenSMS(true);
-              } catch (error) {}
+              } catch (error) {
+                console.log("error updating info aurum ", error);
+              }
             } catch (error) {
               console.log("update indicator terms and conditions ", error);
             }
@@ -525,7 +549,7 @@ const Signup = () => {
       console.log("Response from simple login", error);
     }
   };
-  const sendOTPSMSM = async (data) => {
+  const sendOTPSMSM = async (data: OTPFormData) => {
     console.log("data disponible desde validación de otp", data);
     setLoading(true);
     setIsOpen(false);
@@ -609,7 +633,9 @@ const Signup = () => {
         {step === 1 && (
           <StepOne register={register} errors={errors} watch={watch} />
         )}
-        {step === 2 && <StepTwo register={register} errors={errors} />}
+        {step === 2 && (
+          <StepTwo register={register} errors={errors} watch={watch} />
+        )}
 
         {step === 3 && (
           <StepThreeMock
@@ -620,7 +646,9 @@ const Signup = () => {
             token={token}
           />
         )}
-        {step === 4 && <StepFour register={register} errors={errors} />}
+        {step === 4 && (
+          <StepFour register={register} errors={errors} watch={watch} />
+        )}
 
         {step === 5 && (
           <StepFiveMock
@@ -637,13 +665,19 @@ const Signup = () => {
             register={register}
             errors={errors}
             fields={fields}
-            append={append}
             remove={remove}
             watch={watch}
+            append={append}
           />
         )}
         {step === 7 && (
-          <StepCargaDocumentos register={register} errors={errors} />
+          <StepCargaDocumentos
+            register={register}
+            errors={errors}
+            watch={watch}
+            remove={remove}
+            append={append}
+          />
         )}
         <div className="form-navigation">
           {step > 1 && (
@@ -665,7 +699,7 @@ const Signup = () => {
       </form>
       {loading ? (
         <>
-          <Loader color="pink" size="300px" />
+          <Loader color="pink" />
         </>
       ) : (
         <></>

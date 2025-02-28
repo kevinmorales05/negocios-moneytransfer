@@ -1,15 +1,18 @@
-import { useContext } from "react";
+import { ReactElement } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
 import MainPage from "../pages/MainPage";
 import SuccessPage from "@/pages/Success";
+import { useAuth } from "@/context/authSafeHook";
 
+interface PrivateRouteProps {
+  element: ReactElement;
+}
 // Componente para proteger rutas
-const PrivateRoute = ({ element }) => {
-  const { user, logged } = useContext(AuthContext);
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
+  const { logged } = useAuth();
   return logged ? element : <Navigate to="/login" />;
 };
 
