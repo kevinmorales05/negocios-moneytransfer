@@ -113,7 +113,7 @@ const Signup = () => {
   }, []);
 
   const navigate = useNavigate();
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(5);
   const totalSteps: number = 7;
 
   //valida los campos cada vez que salta a otro paso
@@ -628,6 +628,7 @@ const Signup = () => {
             errors={errors}
             watch={watch}
             setValue={setValue}
+            token={token}
           />
         )}
 

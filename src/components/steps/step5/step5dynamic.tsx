@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "../../../styles/singup.css";
+import { getAddressByZipCode } from "@/services/aurumcore/onboarding";
 
-export const StepFiveMock = ({ register, errors, setValue, watch }) => {
+export const StepFiveMock = ({ register, errors, setValue, watch, token }) => {
     const [colonias, setColonias] = useState([]);
     const [loading, setLoading] = useState(false);
     const postalCode = watch("repaddressZip");
@@ -12,28 +13,103 @@ export const StepFiveMock = ({ register, errors, setValue, watch }) => {
         if (!postalCode || postalCode.length !== 5) return;
   
         setLoading(true);
-        setTimeout(() => {
-          const mockResponse = {
-            codigoPostal: "06700",
-            estadoNombre: "Ciudad de México",
-            estadoCodigo: "CDMX",
-            ciudadNombre: "Cuauhtémoc",
-            ciudadCodigo: "CUA",
-            colonias: [
-              { codigo: "001", nombre: "Roma Norte" },
-              { codigo: "002", nombre: "Roma Sur" },
-              { codigo: "003", nombre: "Hipódromo" },
-            ],
-          };
-  
-          setValue("repaddressState", mockResponse.estadoNombre);
-          setValue("repaddressStateCode", mockResponse.estadoCodigo);
-          setValue("repaddressCity", mockResponse.ciudadNombre);
-          setValue("repaddressCityCode", mockResponse.ciudadCodigo);
-          setValue("repaddressCountry", "México"); // Fijo para México
-          setColonias(mockResponse.colonias);
-          setLoading(false);
-        }, 1000); // Simula un retraso de 1 segundo
+        //para hacer pruebas sencillas usar esto
+        // setTimeout(() => {
+        //   const mockResponse = {
+        //     responseCode: "0",
+        //     responseMessage: "Proceso completo y exitoso.",
+        //     responseSubject: "Éxito",
+        //     messageType: 1,
+        //     transId: "12502271611210072",
+        //     data: [
+        //       {
+        //         idState: "15",
+        //         nameState: "MEXICO",
+        //         idCity: "15-025",
+        //         nameCity: "Chalco",
+        //         idSuburb: "15-025-4455",
+        //         nameSuburb: "Independencia Chimalpa",
+        //         postalCode: "56625",
+        //       },
+        //       {
+        //         idState: "15",
+        //         nameState: "MEXICO",
+        //         idCity: "15-025",
+        //         nameCity: "Chalco",
+        //         idSuburb: "15-025-4456",
+        //         nameSuburb: "San Lorenzo Chimalpa",
+        //         postalCode: "56625",
+        //       },
+        //       {
+        //         idState: "15",
+        //         nameState: "MEXICO",
+        //         idCity: "15-025",
+        //         nameCity: "Chalco",
+        //         idSuburb: "15-025-4457",
+        //         nameSuburb: "San Martín Xico Nuevo",
+        //         postalCode: "56625",
+        //       },
+        //       {
+        //         idState: "15",
+        //         nameState: "MEXICO",
+        //         idCity: "15-025",
+        //         nameCity: "Chalco",
+        //         idSuburb: "15-025-4458",
+        //         nameSuburb: "San Mateo Huitzilzingo",
+        //         postalCode: "56625",
+        //       },
+        //       {
+        //         idState: "15",
+        //         nameState: "MEXICO",
+        //         idCity: "15-025",
+        //         nameCity: "Chalco",
+        //         idSuburb: "15-025-9118",
+        //         nameSuburb: "Guadalupe",
+        //         postalCode: "56625",
+        //       },
+        //     ],
+        //     accountholderId: null,
+        //   };
+        //   const locationData = mockResponse.data[0];
+
+        //   if (mockResponse.responseCode === "0" && mockResponse.data.length > 0) {
+        //   const locationData = mockResponse.data[0];
+
+        //   setValue("repaddressStateName", locationData.nameState);
+        //   setValue("repaddressState", locationData.idState);
+        //   setValue("repaddressCityName", locationData.nameCity);
+        //   setValue("repaddressCity", locationData.idCity);
+        //   setValue("repaddressCountry", "187"); // Fijo para México
+        //   setValue("repaddressCountryName", "México");
+        //   setColonias(mockResponse.data);
+          
+        //   // setColonias([
+        //   //   { codigo: locationData.idSuburb, nombre: locationData.nameSuburb },
+        //   // ]);
+        // }
+        // setLoading(false);
+        //   setLoading(false);
+        // }, 1000); // Simula un retraso de 1 segundo
+
+         try {
+                const dataAddress = await getAddressByZipCode(postalCode, token);
+                console.log("response get address ", dataAddress);
+                console.log("response get address data ", dataAddress.data);
+                if (dataAddress.responseCode === "0" && dataAddress.data.length > 0) {
+                  const locationData = dataAddress.data[0];
+        
+                  setValue("repaddressStateName", locationData.nameState);
+                  setValue("repaddressState", locationData.idState);
+                  setValue("repaddressCityName", locationData.nameCity);
+                  setValue("repaddressCity", locationData.idCity);
+                  setValue("repaddressCountry", "187"); // Fijo para México
+                  setValue("repaddressCountryName", "México");
+                  setColonias(dataAddress.data);
+                }
+                setLoading(false);
+              } catch (error) {
+                console.log("error consulting the dataAddress ", error);
+              }
       };
   
       fetchLocationData();
@@ -131,37 +207,38 @@ export const StepFiveMock = ({ register, errors, setValue, watch }) => {
       <label>Estado</label>
       <input
         type="text"
-        {...register("repaddressState")}
+        {...register("repaddressStateName")}
         className="form-input"
         readOnly
       />
-      <input type="hidden" {...register("repaddressStateCode")} />{" "}
+      <input type="hidden" {...register("repaddressState")} />{" "}
       {/* Código del estado */}
       <label>Ciudad</label>
       <input
         type="text"
-        {...register("repaddressCity")}
+        {...register("repaddressCityName")}
         className="form-input"
         readOnly
       />
-      <input type="hidden" {...register("repaddressCityCode")} />{" "}
+      <input type="hidden" {...register("repaddressCity")} />{" "}
       {/* Código de la ciudad */}
       <label>Colonia</label>
       <select {...register("repcolonia")} className="form-input">
         <option value="">Seleccione una colonia</option>
         {colonias.map((colonia, index) => (
-          <option key={index} value={colonia.codigo}>
-            {colonia.nombre}
+          <option key={index} value={colonia.idSuburb}>
+            {colonia.nameSuburb}
           </option>
         ))}
       </select>
       <label>País</label>
       <input
         type="text"
-        {...register("repaddressCountry")}
+        {...register("repaddressCountryName")}
         className="form-input"
         readOnly
       />
+      <input type="hidden" {...register("repaddressCountry")} />{" "}
 
     <label>Teléfono</label>
     <input

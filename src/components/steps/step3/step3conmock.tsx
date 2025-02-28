@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "../../../styles/singup.css";
+import { getAddressByZipCode } from "@/services/aurumcore/onboarding";
 
 export const StepThreeMock = ({ register, errors, setValue, watch, token }) => {
   const [colonias, setColonias] = useState([]);
@@ -11,65 +12,89 @@ export const StepThreeMock = ({ register, errors, setValue, watch, token }) => {
       if (!postalCode || postalCode.length !== 5) return;
 
       setLoading(true);
-      setTimeout(() => {
-        const mockResponse = {
-          responseCode: "0",
-          responseMessage: "Proceso completo y exitoso.",
-          responseSubject: "Éxito",
-          messageType: 1,
-          transId: "12502271611210072",
-          data: [
-            {
-              idState: "15",
-              nameState: "MEXICO",
-              idCity: "15-025",
-              nameCity: "Chalco",
-              idSuburb: "15-025-4455",
-              nameSuburb: "Independencia Chimalpa",
-              postalCode: "56625",
-            },
-            {
-              idState: "15",
-              nameState: "MEXICO",
-              idCity: "15-025",
-              nameCity: "Chalco",
-              idSuburb: "15-025-4456",
-              nameSuburb: "San Lorenzo Chimalpa",
-              postalCode: "56625",
-            },
-            {
-              idState: "15",
-              nameState: "MEXICO",
-              idCity: "15-025",
-              nameCity: "Chalco",
-              idSuburb: "15-025-4457",
-              nameSuburb: "San Martín Xico Nuevo",
-              postalCode: "56625",
-            },
-            {
-              idState: "15",
-              nameState: "MEXICO",
-              idCity: "15-025",
-              nameCity: "Chalco",
-              idSuburb: "15-025-4458",
-              nameSuburb: "San Mateo Huitzilzingo",
-              postalCode: "56625",
-            },
-            {
-              idState: "15",
-              nameState: "MEXICO",
-              idCity: "15-025",
-              nameCity: "Chalco",
-              idSuburb: "15-025-9118",
-              nameSuburb: "Guadalupe",
-              postalCode: "56625",
-            },
-          ],
-          accountholderId: null,
-        };
+      //para pruebas
+      // setTimeout(() => {
+      //   const mockResponse = {
+      //     responseCode: "0",
+      //     responseMessage: "Proceso completo y exitoso.",
+      //     responseSubject: "Éxito",
+      //     messageType: 1,
+      //     transId: "12502271611210072",
+      //     data: [
+      //       {
+      //         idState: "15",
+      //         nameState: "MEXICO",
+      //         idCity: "15-025",
+      //         nameCity: "Chalco",
+      //         idSuburb: "15-025-4455",
+      //         nameSuburb: "Independencia Chimalpa",
+      //         postalCode: "56625",
+      //       },
+      //       {
+      //         idState: "15",
+      //         nameState: "MEXICO",
+      //         idCity: "15-025",
+      //         nameCity: "Chalco",
+      //         idSuburb: "15-025-4456",
+      //         nameSuburb: "San Lorenzo Chimalpa",
+      //         postalCode: "56625",
+      //       },
+      //       {
+      //         idState: "15",
+      //         nameState: "MEXICO",
+      //         idCity: "15-025",
+      //         nameCity: "Chalco",
+      //         idSuburb: "15-025-4457",
+      //         nameSuburb: "San Martín Xico Nuevo",
+      //         postalCode: "56625",
+      //       },
+      //       {
+      //         idState: "15",
+      //         nameState: "MEXICO",
+      //         idCity: "15-025",
+      //         nameCity: "Chalco",
+      //         idSuburb: "15-025-4458",
+      //         nameSuburb: "San Mateo Huitzilzingo",
+      //         postalCode: "56625",
+      //       },
+      //       {
+      //         idState: "15",
+      //         nameState: "MEXICO",
+      //         idCity: "15-025",
+      //         nameCity: "Chalco",
+      //         idSuburb: "15-025-9118",
+      //         nameSuburb: "Guadalupe",
+      //         postalCode: "56625",
+      //       },
+      //     ],
+      //     accountholderId: null,
+      //   };
 
-        if (mockResponse.responseCode === "0" && mockResponse.data.length > 0) {
-          const locationData = mockResponse.data[0];
+      //   if (mockResponse.responseCode === "0" && mockResponse.data.length > 0) {
+      //     const locationData = mockResponse.data[0];
+
+      //     setValue("addressStateName", locationData.nameState);
+      //     setValue("addressState", locationData.idState);
+      //     setValue("addressCityName", locationData.nameCity);
+      //     setValue("addressCity", locationData.idCity);
+      //     setValue("addressCountry", "187"); // Fijo para México
+      //     setValue("addressCountryName", "México");
+      //     setColonias(mockResponse.data);
+
+      //     // setColonias([
+      //     //   { codigo: locationData.idSuburb, nombre: locationData.nameSuburb },
+      //     // ]);
+      //   }
+      //   setLoading(false);
+      // }, 1000);
+
+      //consumir servicio aurum core address
+      try {
+        const dataAddress = await getAddressByZipCode(postalCode, token);
+        console.log("response get address ", dataAddress);
+        console.log("response get address data ", dataAddress.data);
+        if (dataAddress.responseCode === "0" && dataAddress.data.length > 0) {
+          const locationData = dataAddress.data[0];
 
           setValue("addressStateName", locationData.nameState);
           setValue("addressState", locationData.idState);
@@ -77,18 +102,16 @@ export const StepThreeMock = ({ register, errors, setValue, watch, token }) => {
           setValue("addressCity", locationData.idCity);
           setValue("addressCountry", "187"); // Fijo para México
           setValue("addressCountryName", "México");
-          setColonias(mockResponse.data);
-          
-          // setColonias([
-          //   { codigo: locationData.idSuburb, nombre: locationData.nameSuburb },
-          // ]);
+          setColonias(dataAddress.data);
         }
         setLoading(false);
-      }, 1000);
+      } catch (error) {
+        console.log("error consulting the dataAddress ", error);
+      }
     };
 
     fetchLocationData();
-  }, [postalCode, setValue]);
+  }, [postalCode, setValue, token]);
 
   return (
     <div className="form-step">
@@ -143,7 +166,6 @@ export const StepThreeMock = ({ register, errors, setValue, watch, token }) => {
         readOnly
       />
       <input type="hidden" {...register("addressCity")} />
-      
 
       <label>Colonia</label>
       <select {...register("colonia")} className="form-input">
