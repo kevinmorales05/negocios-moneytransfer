@@ -2,7 +2,7 @@ import cryptoAES from "@/utils/cryptoAES";
 import { AuthDataInterface, CoordinatesInterface } from "../../types/basic";
 import { Buffer } from 'buffer';
 
-export async function preSingUp(
+export async function preSingUp2(
   user: AuthDataInterface,
   coordinates: CoordinatesInterface
 ) {
@@ -24,6 +24,7 @@ export async function preSingUp(
 console.log('cyphered password ', cypheredpassword);
 
   myHeaders.append("Authorization", `Basic ${base64Credentials2}`);
+  console.log("Headers antes de la solicitud:", myHeaders);
 
   const urlencoded = new URLSearchParams();
   urlencoded.append("grant_type", "client_credentials");
@@ -40,7 +41,7 @@ console.log('cyphered password ', cypheredpassword);
   const requestOptions = {
     method: "POST",
     headers: myHeaders,
-    body: urlencoded,
+    body: urlencoded.toString(),
   };
   console.log('request ', requestOptions);
 
@@ -57,6 +58,58 @@ console.log('cyphered password ', cypheredpassword);
     throw error;
   }
 }
+import axios from 'axios';
+
+export async function preSingUp(
+  user: AuthDataInterface,
+  coordinates: CoordinatesInterface
+) {
+  const myHeaders = {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Authorization": `Basic ${Buffer.from(`${import.meta.env.VITE_CONSUMER_KEY}:${import.meta.env.VITE_SECRET}`).toString('base64')}`
+  };
+
+  let cypheredpassword: string = "";
+  if (user.password && user.email) {
+    cypheredpassword = cryptoAES(
+      user.password,
+      import.meta.env.VITE_TENANT_KEY,
+      user.email
+    );
+  }
+
+  console.log('Base64 Authorization:', myHeaders.Authorization);
+  console.log('Cyphered password:', cypheredpassword);
+
+  const urlencoded = new URLSearchParams();
+  urlencoded.append("grant_type", "client_credentials");
+  urlencoded.append("password", `${cypheredpassword}`);
+  urlencoded.append("scope", "use_otp update_info_scope use_accounts use_payments use_profile use_cards");
+  urlencoded.append("username", `${user.email}@casher.mx`);
+  urlencoded.append("longitude", coordinates.longitude.toString());
+  urlencoded.append("latitude", coordinates.latitude.toString());
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    data: urlencoded.toString() // 'data' en lugar de 'body' cuando se usa Axios
+  };
+
+  try {
+    const response = await axios(import.meta.env.VITE_AUTH_URL, requestOptions);
+    
+    // Si la respuesta es exitosa, retornamos el json de la respuesta
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error en autenticación:', error.response?.data || error.message);
+    } else {
+      console.error('Error inesperado:', error);
+    }
+    throw error;
+  }
+}
+
 //get address codes according to zipcode
 export async function getAddressByZipCode(postalCode: string, token: string) {
   const myHeaders = new Headers();
