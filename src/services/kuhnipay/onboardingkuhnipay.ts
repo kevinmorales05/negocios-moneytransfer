@@ -46,7 +46,7 @@ export async function registerUserAccount(
 
   try {
     const response = await fetch(
-      `    ${import.meta.env.VITE_MGTW}/${
+      `${import.meta.env.VITE_MGTW}/${
         import.meta.env.VITE_TENANT_NAME
       }casherusers/1.0.0/casherusers/api/v1/registerUserAccount`,
       requestOptions
@@ -129,7 +129,7 @@ export async function registerPersonalInfo(
 
     const result = await response.json();
     console.log(result);
-    return { success: false, message: "error desconocido!"}
+    return { success: false, message: "error desconocido!" };
   } catch (error) {
     console.error(error);
     return { success: false, message: (error as Error).message };

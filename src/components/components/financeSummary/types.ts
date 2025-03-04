@@ -1,3 +1,5 @@
+import { AccountBalance, AccountData, TransactionCore } from "@/services/kuhnipay/loggedservices";
+
 // Define the type for a single transaction
 export interface Transaction {
     description: string;
@@ -7,6 +9,7 @@ export interface Transaction {
   // Define the props type for FinanceSummary
   export interface FinanceSummaryProps {
     companyName: string;
-    balance: number;
-    transactions: Transaction[];
+    transactionsCore?: TransactionCore[] | null;
+    accountBalance?: AccountBalance[] | null;
+    account?: AccountData[] | null;
   }

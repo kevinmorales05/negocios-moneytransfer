@@ -1,0 +1,118 @@
+/* Contenedor principal */
+.transaction-container {
+  width: 95%;
+  max-width: 600px;
+  margin: 20px auto;
+  font-family: "Arial", sans-serif;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+/* Título */
+h2 {
+  text-align: center;
+  color: #333;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* Lista de transacciones */
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Tarjeta de transacción */
+.transaction-card {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.transaction-card:hover {
+  transform: scale(1.02);
+}
+
+/* Encabezado de transacción */
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.transaction-id {
+  color: #555;
+}
+
+.transaction-status {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Estados de transacción */
+.confirmed {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.pending {
+  color: #d32f2f;
+  background: #ffebee;
+}
+
+/* Cuerpo de la transacción */
+.transaction-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.transaction-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #555;
+}
+
+.transaction-label {
+  font-weight: bold;
+}
+
+/* Monto */
+.transaction-amount {
+  font-weight: bold;
+}
+
+.positive {
+  color: #1565c0;
+}
+
+.negative {
+  color: #d32f2f;
+}
+
+/* Mensaje de No Transacciones */
+.no-transactions {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  padding: 20px;
+}
+
+/* Responsividad */
+@media (max-width: 480px) {
+  .transaction-card {
+    padding: 12px;
+  }
+
+  .transaction-info {
+    font-size: 12px;
+  }
+}

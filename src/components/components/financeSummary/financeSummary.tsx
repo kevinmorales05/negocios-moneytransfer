@@ -1,10 +1,13 @@
+import AccountCard from "../accountCard/accountCard";
+import TransactionList from "../transactionsList/TransactionList";
 import "./financeSummary.css";
 import { FinanceSummaryProps } from "./types";
 
 const FinanceSummary: React.FC<FinanceSummaryProps> = ({
   companyName,
-  balance,
-  transactions,
+  accountBalance,
+  transactionsCore,
+  account,
 }) => {
   const currentDate = new Date().toLocaleDateString();
 
@@ -17,32 +20,35 @@ const FinanceSummary: React.FC<FinanceSummaryProps> = ({
       </div>
 
       {/* Sección del balance actual */}
-      <div className="balance-section">
-        Balance Actual: ${balance.toFixed(2)}
-      </div>
+      {accountBalance === null || accountBalance === undefined ? (
+        <></>
+      ) : (
+        <>
+          <div className="balance-section">
+            Balance Actual: ${accountBalance[0].amount.amount}
+          </div>
+        </>
+      )}
+      {account === null || account === undefined ? (
+        <></>
+      ) : (
+        <>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "50px",
+            }}
+          >
+            <AccountCard accountNumber={account[0].account.identification} />
+          </div>
+        </>
+      )}
 
       {/* Sección de transacciones */}
-      <div className="transactions">
-        <h3>Transacciones Recientes</h3>
-        <ul className="transaction-list">
-          {transactions.length > 0 ? (
-            transactions.map((tx, index) => (
-              <li key={index} className="transaction-item">
-                <span>{tx.description}</span>
-                <span
-                  className={`transaction-amount ${
-                    tx.amount >= 0 ? "positive" : "negative"
-                  }`}
-                >
-                  {tx.amount >= 0 ? `+${tx.amount}` : `${tx.amount}`} USD
-                </span>
-              </li>
-            ))
-          ) : (
-            <li>No hay transacciones recientes.</li>
-          )}
-        </ul>
-      </div>
+
+      {/* Sección de transacciones con el core */}
+      <TransactionList transactions={transactionsCore} />
     </div>
   );
 };
